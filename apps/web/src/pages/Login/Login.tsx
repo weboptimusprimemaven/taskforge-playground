@@ -17,7 +17,7 @@ export function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
-  event.preventDefault();
+    event.preventDefault();
 
     setError(null);
     setIsLoading(true);
@@ -67,6 +67,8 @@ export function Login() {
 
         <Button
           data-testid="login-submit-button"
+          size="lg"
+          variant="primary"
           type="submit"
           disabled={isLoading}
         >

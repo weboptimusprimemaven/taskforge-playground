@@ -24,30 +24,30 @@ export function AuthProvider({
   children: ReactNode;
 }) {
   const [user, setUser] = useState<User | null>(() => {
-  const stored = localStorage.getItem("user");
+    const stored = localStorage.getItem("user");
 
-  return stored ? JSON.parse(stored) : null;
-});
+    return stored ? JSON.parse(stored) : null;
+  });
 
-const [token, setToken] = useState<string | null>(() => {
-  return localStorage.getItem("token");
-});
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem("token");
+  });
 
   function login(token: string, user: User) {
-  localStorage.setItem("token", token);
-  localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
-  setToken(token);
-  setUser(user);
-}
+    setToken(token);
+    setUser(user);
+  }
 
   function logout() {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
-  setToken(null);
-  setUser(null);
-}
+    setToken(null);
+    setUser(null);
+  }
 
   return (
     <AuthContext.Provider

@@ -28,10 +28,10 @@ export async function addTodo(title: string): Promise<Todo> {
   const todos = loadTodos();
 
   const todo: Todo = {
-  id: crypto.randomUUID(),
-  title,
-  completed: false,
-};
+    id: crypto.randomUUID(),
+    title,
+    completed: false,
+  };
 
   const updated = [...todos, todo];
 
@@ -46,9 +46,9 @@ export async function toggleTodo(id: string): Promise<Todo> {
   const updated = todos.map((todo) =>
     todo.id === id
       ? {
-          ...todo,
-          completed: !todo.completed,
-        }
+        ...todo,
+        completed: !todo.completed,
+      }
       : todo
   );
 
@@ -67,4 +67,28 @@ export async function deleteTodo(id: string): Promise<void> {
   const updated = loadTodos().filter((todo) => todo.id !== id);
 
   saveTodos(updated);
+}
+
+export function updateTodo(
+  id: string,
+  title: string
+): Promise<Todo> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const todos = loadTodos();
+
+      const updated = todos.map((todo) =>
+        todo.id === id
+          ? {
+            ...todo,
+            title,
+          }
+          : todo
+      );
+
+      saveTodos(updated);
+
+      resolve(updated.find((t) => t.id === id)!);
+    }, 300);
+  });
 }

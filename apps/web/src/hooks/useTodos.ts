@@ -7,6 +7,7 @@ import {
   deleteTodo,
   getTodos,
   toggleTodo,
+  updateTodo,
 } from "../services/todo.service";
 
 export function useTodos() {
@@ -25,9 +26,24 @@ export function useTodos() {
   }, []);
 
   async function create(title: string) {
+    const trimmed = title.trim();
+
+    if (!trimmed) {
+      return;
+    }
+    const exists = todos.some(
+      todo =>
+        todo.title.trim().toLowerCase() ===
+        title.trim().toLowerCase()
+    );
+
+    if (exists) {
+      return;
+    }
+
     const todo = await addTodo(title);
 
-    setTodos((current) => [...current, todo]);
+    setTodos(current => [...current, todo]);
   }
 
   async function toggle(id: string) {
@@ -48,11 +64,25 @@ export function useTodos() {
     );
   }
 
+  async function edit(
+    id: string,
+    title: string
+  ) {
+    const updated = await updateTodo(id, title);
+
+    setTodos((current) =>
+      current.map((todo) =>
+        todo.id === id ? updated : todo
+      )
+    );
+  }
+
   return {
     todos,
     loading,
     create,
     toggle,
     remove,
+    edit,
   };
 }

@@ -12,9 +12,9 @@ export function AddTodoForm({ onAdd }: Props) {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSubmit = async (
-  event: React.FormEvent<HTMLFormElement>
-) => {
-  event.preventDefault();
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
 
     const trimmed = title.trim();
 
@@ -24,11 +24,13 @@ export function AddTodoForm({ onAdd }: Props) {
 
     setIsSaving(true);
 
-    await onAdd(trimmed);
-
-    setTitle("");
-    setIsSaving(false);
-  }
+    try {
+      await onAdd(trimmed);
+      setTitle("");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -37,12 +39,15 @@ export function AddTodoForm({ onAdd }: Props) {
         placeholder="What needs doing?"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        maxLength={120}
       />
+
+      <p>{title.length}/120</p>
 
       <Button
         data-testid="todo-add-button"
         type="submit"
-        disabled={isSaving}
+        disabled={!title.trim() || isSaving}
       >
         {isSaving ? "Adding..." : "Add"}
       </Button>
