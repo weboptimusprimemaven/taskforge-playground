@@ -1,3 +1,6 @@
+import "./../../styles/components/todo-item.css";
+
+import { Button } from "../ui/Button";
 import type { Todo } from "../../types/todo";
 
 interface Props {
@@ -12,15 +15,8 @@ export function TodoItem({
   onDelete,
 }: Props) {
   return (
-    <li
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "0.5rem",
-      }}
-    >
-      <label>
+    <li className="todo-item">
+      <div className="todo-item-left">
         <input
           type="checkbox"
           checked={todo.completed}
@@ -28,23 +24,19 @@ export function TodoItem({
         />
 
         <span
-          style={{
-            marginLeft: "0.5rem",
-            textDecoration: todo.completed
-              ? "line-through"
-              : "none",
-          }}
+          className={`todo-item-title ${
+            todo.completed ? "completed" : ""
+          }`}
         >
           {todo.title}
         </span>
-      </label>
+      </div>
 
-      <button
-        data-testid={`delete-${todo.id}`}
+      <Button
         onClick={() => onDelete(todo.id)}
       >
-        🗑
-      </button>
+        Delete
+      </Button>
     </li>
   );
 }

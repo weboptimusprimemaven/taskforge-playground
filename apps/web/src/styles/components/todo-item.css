@@ -1,0 +1,24 @@
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 1rem 0;
+
+  border-bottom: 1px solid #ececec;
+}
+
+.todo-item-left {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.todo-item-title {
+  font-size: .95rem;
+}
+
+.todo-item-title.completed {
+  color: #888;
+  text-decoration: line-through;
+}

@@ -1,5 +1,14 @@
-type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+import "./../../styles/components/input.css";
+
+import type { InputHTMLAttributes } from "react";
+
+type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 export function Input(props: InputProps) {
-  return <input className="input" {...props} />;
+  return (
+    <input
+      {...props}
+      className={`input ${props.className ?? ""}`}
+    />
+  );
 }

@@ -23,18 +23,31 @@ export function AuthProvider({
 }: {
   children: ReactNode;
 }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+  const stored = localStorage.getItem("user");
+
+  return stored ? JSON.parse(stored) : null;
+});
+
+const [token, setToken] = useState<string | null>(() => {
+  return localStorage.getItem("token");
+});
 
   function login(token: string, user: User) {
-    setToken(token);
-    setUser(user);
-  }
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(user));
+
+  setToken(token);
+  setUser(user);
+}
 
   function logout() {
-    setToken(null);
-    setUser(null);
-  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+
+  setToken(null);
+  setUser(null);
+}
 
   return (
     <AuthContext.Provider

@@ -1,53 +1,49 @@
 import type { Todo } from "../types/todo";
 
-let TODOS: Todo[] = [
-  {
-    id: "1",
-    title: "Learn Playwright",
-    completed: false,
-  },
-  {
-    id: "2",
-    title: "Build awesome portfolio",
-    completed: false,
-  },
-  {
-    id: "3",
-    title: "Get hired",
-    completed: true,
-  },
-];
+const STORAGE_KEY = "taskforge-todos";
 
-const DELAY = 300;
+function loadTodos(): Todo[] {
+  const stored = localStorage.getItem(STORAGE_KEY);
 
-function wait() {
-  return new Promise((resolve) => setTimeout(resolve, DELAY));
+  if (!stored) {
+    return [];
+  }
+
+  try {
+    return JSON.parse(stored) as Todo[];
+  } catch {
+    return [];
+  }
+}
+
+function saveTodos(todos: Todo[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
 export async function getTodos(): Promise<Todo[]> {
-  await wait();
-
-  return [...TODOS];
+  return loadTodos();
 }
 
 export async function addTodo(title: string): Promise<Todo> {
-  await wait();
+  const todos = loadTodos();
 
   const todo: Todo = {
-    id: crypto.randomUUID(),
-    title,
-    completed: false,
-  };
+  id: crypto.randomUUID(),
+  title,
+  completed: false,
+};
 
-  TODOS = [...TODOS, todo];
+  const updated = [...todos, todo];
+
+  saveTodos(updated);
 
   return todo;
 }
 
 export async function toggleTodo(id: string): Promise<Todo> {
-  await wait();
+  const todos = loadTodos();
 
-  TODOS = TODOS.map((todo) =>
+  const updated = todos.map((todo) =>
     todo.id === id
       ? {
           ...todo,
@@ -56,17 +52,19 @@ export async function toggleTodo(id: string): Promise<Todo> {
       : todo
   );
 
-  const updated = TODOS.find((todo) => todo.id === id);
+  saveTodos(updated);
 
-  if (!updated) {
+  const todo = updated.find((t) => t.id === id);
+
+  if (!todo) {
     throw new Error("Todo not found");
   }
 
-  return updated;
+  return todo;
 }
 
 export async function deleteTodo(id: string): Promise<void> {
-  await wait();
+  const updated = loadTodos().filter((todo) => todo.id !== id);
 
-  TODOS = TODOS.filter((todo) => todo.id !== id);
+  saveTodos(updated);
 }
