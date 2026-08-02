@@ -214,3 +214,16 @@ test("user can delete a todo", async ({ page }) => {
   await todoPage.delete(title);
   await todoPage.expectTodoMissing(title);
 });
+
+test("delete confirmation stays visible in the viewport", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  const dashboardPage = new DashboardPage(page);
+  const todoPage = new TodoPage(page);
+  const title = `Visible dialog ${Date.now()}`;
+
+  await loginPage.goto();
+  await loginPage.login(demoUser);
+  await dashboardPage.addTodo(title);
+  await todoPage.openDeleteDialog(title);
+  await todoPage.expectDeleteDialogInViewport();
+});

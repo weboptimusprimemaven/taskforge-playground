@@ -78,13 +78,26 @@ export class TodoPage extends BasePage {
     }
 
     async delete(title: string) {
-        const item = this.todoItem(title);
+        await this.openDeleteDialog(title);
+        await this.page.getByTestId("confirm-button").click();
+    }
 
-        await item.getByTestId("todo-delete-button").click();
+    async openDeleteDialog(title: string) {
+        await this.todoItem(title).getByTestId("todo-delete-button").click();
+    }
 
-        await this.page
-            .getByTestId("confirm-button")
-            .click();
+    async expectDeleteDialogInViewport() {
+        const dialog = this.page.getByTestId("confirm-dialog");
+        await expect(dialog).toBeVisible();
+        await expect(dialog.locator("..")).toHaveCSS("position", "fixed");
+
+        const box = await dialog.boundingBox();
+        const viewport = this.page.viewportSize();
+
+        expect(box).not.toBeNull();
+        expect(viewport).not.toBeNull();
+        expect(box!.y).toBeGreaterThanOrEqual(0);
+        expect(box!.y + box!.height).toBeLessThanOrEqual(viewport!.height);
     }
 
     async expectCompleted(title: string) {
