@@ -20,26 +20,35 @@ export function ConfirmDialog({
 }: Props) {
     return (
         <div className="dialog-overlay">
-            <div className="dialog">
-                <h2>{title}</h2>
+            <div
+                className="dialog"
+                data-testid="confirm-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="confirm-dialog-title"
+            >
+                <h2 id="confirm-dialog-title">{title}</h2>
 
                 <p>{message}</p>
 
                 <div className="dialog-actions">
                     <Button
+                        data-testid="cancel-button"
                         variant="secondary"
                         type="button"
                         onClick={onCancel}
                     >
-                        Cancel
+                        {cancelText}
                     </Button>
 
                     <Button
+
+                        data-testid="confirm-button"
                         variant="danger"
                         type="button"
                         onClick={onConfirm}
                     >
-                        Delete
+                        {confirmText}
                     </Button>
                 </div>
             </div>

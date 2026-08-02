@@ -34,3 +34,7 @@
 .todo-item-edit input {
     flex: 1;
 }
+
+.todo-item-title.completed {
+    text-decoration: line-through;
+}

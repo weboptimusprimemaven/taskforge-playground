@@ -53,8 +53,9 @@ export function TodoItem({
   }, [editing]);
 
   return (
-    <li className="todo-item">
+    <li className="todo-item" data-testid="todo-item">
       <input
+        data-testid="todo-checkbox"
         type="checkbox"
         checked={todo.completed}
         onChange={() => onToggle(todo.id)}
@@ -63,6 +64,7 @@ export function TodoItem({
       {editing ? (
         <div className="todo-item-edit">
           <Input
+            data-testid="todo-edit-input"
             ref={inputRef}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -79,6 +81,7 @@ export function TodoItem({
 
           <div className="todo-item-actions">
             <Button
+              data-testid="todo-save-button"
               variant="success"
               type="button"
               onClick={handleSave}
@@ -89,6 +92,7 @@ export function TodoItem({
             </Button>
 
             <Button
+              data-testid="todo-cancel-button"
               variant="secondary"
               type="button"
               onClick={handleCancel}
@@ -102,19 +106,17 @@ export function TodoItem({
       ) : (
         <>
           <span
-            style={{
-              flex: 1,
-              textDecoration: todo.completed
-                ? "line-through"
-                : "none",
-            }}
+            data-testid="todo-title"
+            className={`todo-item-title ${todo.completed ? "completed" : ""
+              }`}
           >
             {todo.title}
           </span>
 
           <div className="todo-item-actions">
             <Button
-              variant="primary"
+              data-testid="todo-edit-button"
+              variant="secondary"
               type="button"
               onClick={() => setEditing(true)}
               title="Edit task"
@@ -124,6 +126,7 @@ export function TodoItem({
             </Button>
 
             <Button
+              data-testid="todo-delete-button"
               variant="danger"
               type="button"
               onClick={() => onDelete(todo.id)}

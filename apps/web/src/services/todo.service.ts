@@ -24,8 +24,19 @@ export async function getTodos(): Promise<Todo[]> {
   return loadTodos();
 }
 
+
+
 export async function addTodo(title: string): Promise<Todo> {
   const todos = loadTodos();
+  const exists = todos.some(
+    (todo) =>
+      todo.title.trim().toLowerCase() ===
+      title.trim().toLowerCase()
+  );
+
+  if (exists) {
+    throw new Error("Todo already exists.");
+  }
 
   const todo: Todo = {
     id: crypto.randomUUID(),

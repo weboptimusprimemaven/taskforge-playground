@@ -1,5 +1,4 @@
 import "../../styles/components/toast.css";
-import { useEffect } from "react";
 
 interface Props {
     message: string;
@@ -8,9 +7,8 @@ interface Props {
 
 export function Toast({ message }: Props) {
     return (
-        <div className="toast">
+        <div className="toast" data-testid="toast">
             {message}
         </div>
     );
 }
-

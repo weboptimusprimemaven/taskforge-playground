@@ -2,6 +2,8 @@
 
 A modern React + TypeScript playground for building production-quality frontend applications.
 
+Current version: **1.0.1**
+
 The project started as a simple Todo application and is gradually evolving into a portfolio project demonstrating professional React architecture, reusable UI components, testing, accessibility, and modern frontend best practices.
 
 ---
@@ -14,7 +16,7 @@ The project started as a simple Todo application and is gradually evolving into 
 - React Router
 - Playwright
 - Lucide React
-- CSS Modules / Component-based CSS
+- Component-based CSS
 - pnpm
 
 ---
@@ -37,10 +39,15 @@ The project started as a simple Todo application and is gradually evolving into 
 
 ### Productivity
 
+- Case-insensitive todo search
 - Filter by:
   - All
   - Active
   - Completed
+- Sort by:
+  - Newest or oldest
+  - A–Z or Z–A
+  - Completed first
 
 ### User Experience
 
@@ -53,8 +60,9 @@ The project started as a simple Todo application and is gradually evolving into 
 
 ### Testing
 
-- Playwright end-to-end testing
-- Manual testing after each completed feature
+- Playwright end-to-end tests for authentication and todo workflows
+- Cross-browser coverage in Chromium, Firefox, and WebKit
+- Page objects and stable `data-testid` selectors
 
 ---
 
@@ -89,14 +97,21 @@ pnpm install
 Run the development server
 
 ```bash
-pnpm --filter web dev
+pnpm dev
 ```
 
-Run Playwright tests
+Run all Playwright tests
 
 ```bash
-cd tests
-pnpm exec playwright test
+pnpm test:e2e
+```
+
+Other Playwright modes
+
+```bash
+pnpm test:e2e:ui
+pnpm test:e2e:headed
+pnpm test:e2e:debug
 ```
 
 ---
@@ -105,14 +120,11 @@ pnpm exec playwright test
 
 Upcoming improvements include:
 
-- Search
-- Todo sorting
-- Accessibility improvements
 - GitHub Actions CI
 - Deployment
 - Backend API integration
 - Dark mode
-- Better component architecture
+- Expanded accessibility coverage
 
 ---
 

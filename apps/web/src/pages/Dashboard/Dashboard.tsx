@@ -11,6 +11,7 @@ import { useTodos } from "../../hooks/useTodos";
 import { Toast } from "../../components/ui/Toast";
 import { ConfirmDialog } from "../../components/ui/ConfirmDialog";
 import type { SortOption } from "../../types/sort";
+import { Input } from "../../components/ui/Input";
 
 export function Dashboard() {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ export function Dashboard() {
   const [toast, setToast] = useState("");
   const [todoToDelete, setTodoToDelete] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>("newest");
+  const [search, setSearch] = useState("");
 
   const {
     todos,
@@ -42,23 +44,29 @@ export function Dashboard() {
   }, [toast]);
 
   const filteredTodos = todos.filter((todo) => {
-    switch (filter) {
-      case "active":
-        return !todo.completed;
+    const matchesFilter =
+      filter === "all"
+        ? true
+        : filter === "active"
+          ? !todo.completed
+          : todo.completed;
 
-      case "completed":
-        return todo.completed;
+    const matchesSearch =
+      todo.title
+        .toLowerCase()
+        .includes(search.toLowerCase());
 
-      default:
-        return true;
-    }
+    return matchesFilter && matchesSearch;
   });
 
   const sortedTodos = [...filteredTodos];
 
   switch (sort) {
-    case "oldest":
+    case "newest":
       sortedTodos.reverse();
+      break;
+
+    case "oldest":
       break;
 
     case "alphabetical":
@@ -81,7 +89,6 @@ export function Dashboard() {
       );
       break;
 
-    case "newest":
     default:
       break;
   }
@@ -89,7 +96,7 @@ export function Dashboard() {
 
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p data-testid="loading-state">Loading...</p>;
   }
 
   return (
@@ -114,13 +121,27 @@ export function Dashboard() {
 
       <AddTodoForm
         onAdd={async (title) => {
-          await create(title);
-          setToast("✅ Todo created");
+          try {
+            await create(title);
+            setToast("✅ Todo created");
+          } catch {
+            setToast("⚠️ Todo already exists");
+          }
         }}
+
+
+      />
+
+      <Input
+        placeholder="Search tasks..."
+        data-testid="search-task-field"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
 
       <div className="filter-buttons">
         <Button
+          data-testid="filter-all-button"
           onClick={() => setFilter("all")}
           disabled={filter === "all"}
         >
@@ -128,6 +149,7 @@ export function Dashboard() {
         </Button>
 
         <Button
+          data-testid="filter-active-button"
           onClick={() => setFilter("active")}
           disabled={filter === "active"}
         >
@@ -135,6 +157,7 @@ export function Dashboard() {
         </Button>
 
         <Button
+          data-testid="filter-completed-button"
           onClick={() => setFilter("completed")}
           disabled={filter === "completed"}
         >
@@ -148,6 +171,7 @@ export function Dashboard() {
         </label>
 
         <select
+          data-testid="sort-select"
           id="sort"
           value={sort}
           onChange={(e) =>
@@ -176,13 +200,25 @@ export function Dashboard() {
         </select>
       </div>
 
+      <div className="dashboard-stats" data-testid="dashboard-stats">
+        <span>Total: {todos.length}</span>
+
+        <span>
+          Active: {todos.filter(t => !t.completed).length}
+        </span>
+
+        <span>
+          Completed: {todos.filter(t => t.completed).length}
+        </span>
+      </div>
+
       {todos.length === 0 ? (
-        <div className="empty-state">
+        <div className="empty-state" data-testid="empty-state">
           <h3>No tasks yet</h3>
           <p>Create your first task to get started.</p>
         </div>
       ) : filteredTodos.length === 0 ? (
-        <div className="empty-state">
+        <div className="empty-state" data-testid="empty-state">
           <h3>No matching tasks</h3>
           <p>Try selecting another filter.</p>
         </div>
